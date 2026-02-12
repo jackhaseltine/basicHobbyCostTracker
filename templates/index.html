@@ -67,6 +67,16 @@
     </table>
 
     <hr>
+    <h3>Category Totals</h3>
+    <ul>
+        {% for category in categories %}
+        <li>
+            <strong>{{ category[1] }}:</strong> ${{ "%.2f"|format(category_totals[category[1]]) }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <hr>
     <h3>Manage Categories</h3>
 
     <ul>

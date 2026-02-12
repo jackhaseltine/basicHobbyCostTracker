@@ -53,14 +53,23 @@ def home():
     else:
         c.execute("SELECT * FROM expenses")
     expenses = c.fetchall()
-    conn.close()
 
-    #calculate total
+    #calculate total and category totals
     total_cost = 0
+    category_totals = {}
+    
     for expense in expenses:
         total_cost += expense[2]
+    
+    # Calculate totals for each category
+    for category in categories:
+        c.execute("SELECT SUM(amount) FROM expenses WHERE category = ?", (category[1],))
+        result = c.fetchone()
+        category_totals[category[1]] = result[0] if result[0] is not None else 0.0
 
-    return render_template('index.html', expenses=expenses, total_cost=total_cost, categories=categories, selected_filter=category_filter)
+    conn.close()
+
+    return render_template('index.html', expenses=expenses, total_cost=total_cost, categories=categories, selected_filter=category_filter, category_totals=category_totals)
 
 @app.route('/add', methods=['POST'])
 def add_expense():
